@@ -8,7 +8,7 @@ const Header = () => {
   const { toggleTheme, theme } = useContext(ThemeContext);
 
   return (
-    <div className="flex justify-between mt-4 items-center">
+    <div className="flex justify-between mt-6 sm:mt-0 items-center">
       <div className="text-4xl">
         <TbNotebook />
       </div>
