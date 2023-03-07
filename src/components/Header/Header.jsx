@@ -5,7 +5,7 @@ import { HiOutlineMoon } from "react-icons/hi";
 import { ThemeContext } from "../../Themeprovider";
 
 const Header = () => {
-  const { toggleTheme, isDarkTheme } = useContext(ThemeContext);
+  const { toggleTheme, theme } = useContext(ThemeContext);
 
   return (
     <div className="flex justify-between mt-4 items-center">
@@ -19,9 +19,10 @@ const Header = () => {
           type="checkbox"
           className="toggle toggle-sm toggle-success"
           onChange={toggleTheme}
+          checked={theme === "dark" ? true : false}
         />
         <div className="text-slate-500 text-xl">
-          {isDarkTheme ? <BsFillSunFill /> : <HiOutlineMoon />}
+          {theme === "dark" ? <BsFillSunFill /> : <HiOutlineMoon />}
         </div>
       </div>
     </div>

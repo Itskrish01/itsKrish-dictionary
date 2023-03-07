@@ -10,7 +10,7 @@ import Footer from "./components/Header/Footer";
 import axios from "axios";
 
 function App() {
-  const { isDarkTheme } = useContext(ThemeContext);
+  const { theme, setTheme } = useContext(ThemeContext);
   const [word, setWord] = useState("");
   const [data, setData] = useState([]);
   const [isError, setIsError] = useState(false);
@@ -47,12 +47,19 @@ function App() {
   };
 
   useEffect(() => {
-    if (isDarkTheme) {
-      document.documentElement.setAttribute("data-theme", "dark");
-    } else {
-      document.documentElement.setAttribute("data-theme", "light");
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme) {
+      setTheme(savedTheme);
     }
-  }, [isDarkTheme]);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
 
   return (
     <div>
