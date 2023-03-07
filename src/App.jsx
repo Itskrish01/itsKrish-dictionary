@@ -90,7 +90,7 @@ function App() {
           </div>
         ) : data && data.length !== 0 ? (
           <div>
-            <div className="mt-[5rem] flex items-center justify-between">
+            <div className="mt-[3rem] flex items-center justify-between">
               <div>
                 <h2 className="text-5xl font-bold mb-4">{data[0]?.word}</h2>
                 <h4 className="text-purple-400 text-lg mt-3">
@@ -109,15 +109,15 @@ function App() {
             {data[0]?.meanings.map((item, index) => {
               return (
                 <div key={index}>
-                  <div className="mt-[5rem] flex items-center gap-6 w-full">
+                  <div className="mt-[3rem] flex items-center gap-6 w-full">
                     <p className="p-0 font-bold  m-0 text-lg">
                       {item.partOfSpeech}
                     </p>
                     <div className="flex-1 divider"></div>
                   </div>
                   <div className="mt-8">
-                    <p>Meaning</p>
-                    <ul className="list-disc ml-10 mt-6 flex flex-col gap-4">
+                    <p>Meaning -</p>
+                    <ul className="list-disc ml-10 mt-3 flex flex-col gap-4">
                       {item.definitions.map((item, idx) => (
                         <li key={idx}>{item.definition}</li>
                       ))}
@@ -138,7 +138,7 @@ function App() {
             })}
           </div>
         ) : isError ? (
-          <div className="flex flex-col gap-3 text-center items-center h-[60vh] justify-center">
+          <div className="flex flex-col gap-3 text-center items-center min-h-[65vh] justify-center">
             <div className="text-[6rem]">
               <BiError />
             </div>
@@ -146,12 +146,12 @@ function App() {
               <p className="text-4xl text-gray-500">
                 {error.title} for "{wrongWord}"
               </p>
-              <p className="text-lg text-gray-500">{error.message}</p>
-              <p className="text-lg text-gray-500">{error.resolution}</p>
+              <p className="text-md text-gray-500">{error.message}</p>
+              <p className="text-md text-gray-500">{error.resolution}</p>
             </div>
           </div>
         ) : (
-          <div className="flex flex-col text-center items-center h-[70vh] justify-center">
+          <div className="flex flex-col text-center items-center min-h-[65vh] justify-center">
             <div className="text-[6rem]">
               <TbInputSearch />
             </div>
