@@ -92,7 +92,7 @@ function App() {
           <div>
             <div className="mt-[3rem] flex items-center justify-between">
               <div>
-                <h2 className="text-5xl font-bold mb-4">{data[0]?.word}</h2>
+                <h2 className="text-4xl font-bold mb-4">{data[0]?.word}</h2>
                 <h4 className="text-purple-400 text-lg mt-3">
                   {data[0]?.phonetics[2]?.text !== undefined &&
                     data[0]?.phonetics[2].text}
