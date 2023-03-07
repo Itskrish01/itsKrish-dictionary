@@ -1,0 +1,19 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
+body {
+  font-family: "Noto Serif", serif;
+}
+
+.container-items {
+  max-width: 800px; /* set maximum width of container */
+  margin: 0 auto; /* center container using margin */
+  text-align: left; /* align text to the left */
+  padding: 20px; /* add padding to container */
+}
+
+@media only screen and (max-width: 600px) {
+  .container-items {
+    max-width: 100%; /* set maximum width to 100% on smaller screens */
+    padding: 0 20px; /* reduce padding on smaller screens */
+  }
+}
