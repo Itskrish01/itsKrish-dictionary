@@ -1,50 +1,40 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./App.css";
 import Header from "./components/Header/Header";
-import { BsFillPlayFill } from "react-icons/bs";
 import { TbInputSearch } from "react-icons/tb";
 import { BiError } from "react-icons/bi";
 import { AiFillSound } from "react-icons/ai";
 import { ThemeContext } from "./Themeprovider";
 import Footer from "./components/Header/Footer";
 import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import Meaning from "./components/Meaning";
 
 function App() {
   const { theme, setTheme } = useContext(ThemeContext);
-  const [word, setWord] = useState("");
-  const [data, setData] = useState([]);
-  const [isError, setIsError] = useState(false);
-  const [error, setError] = useState();
-  const [wrongWord, setWronWord] = useState("");
+  const [word, setWord] = useState("keyboard");
+
+  const {
+    data: result,
+    isError,
+    isLoading,
+    refetch,
+    error,
+    isSuccess,
+    isRefetching,
+  } = useQuery({
+    queryKey: ["dictionary"],
+    queryFn: () =>
+      axios.get(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`),
+    onError: () => setWrongWord(word),
+  });
+
+  const data = result?.data;
+
+  console.log(isError);
+
+  const [wrongWord, setWrongWord] = useState("");
   const [audio, setAudio] = useState();
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  const fetchData = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      const response = await axios.get(
-        `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
-      );
-      setIsError(false);
-      const phoneticWithAudio = response.data[0].phonetics.find(
-        (phonetic) => phonetic.audio
-      );
-      setAudio(new Audio(phoneticWithAudio.audio));
-      setWronWord(null);
-      setData(response.data);
-    } catch (error) {
-      setData(null);
-      setIsError(true);
-      setWronWord(word);
-      setError(error.response.data);
-      console.log(error);
-    }
-
-    setIsLoading(false);
-  };
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -62,12 +52,18 @@ function App() {
   }, [theme]);
 
   return (
-    <div>
+    <>
       <div className={`container-items`}>
         <Header />
 
         <div className="divider"></div>
-        <form className="w-full flex" onSubmit={fetchData}>
+        <form
+          className="w-full flex"
+          onSubmit={(e) => {
+            e.preventDefault();
+            refetch();
+          }}
+        >
           <div className="btn-group w-full">
             <input
               type="text"
@@ -80,7 +76,7 @@ function App() {
             </button>
           </div>
         </form>
-        {isLoading ? (
+        {isLoading || isRefetching ? (
           <div className="flex flex-col h-[50vh] gap-5 items-center space-x-2 mt-[5rem]">
             <div aria-label="Loading..." role="status">
               <svg className="h-20 w-20 animate-spin" viewBox="3 3 18 18">
@@ -95,7 +91,7 @@ function App() {
               </svg>
             </div>
           </div>
-        ) : data && data.length !== 0 ? (
+        ) : isSuccess ? (
           <div>
             <div className="mt-[3rem] flex items-center justify-between">
               <div>
@@ -114,34 +110,7 @@ function App() {
               </div>
             </div>
             {data[0]?.meanings.map((item, index) => {
-              return (
-                <div key={index}>
-                  <div className="mt-[3rem] flex items-center gap-6 w-full">
-                    <p className="p-0 font-bold  m-0 text-lg">
-                      {item.partOfSpeech}
-                    </p>
-                    <div className="flex-1 divider"></div>
-                  </div>
-                  <div className="mt-8">
-                    <p>Meaning -</p>
-                    <ul className="list-disc ml-10 mt-3 flex flex-col gap-4">
-                      {item.definitions.map((item, idx) => (
-                        <li key={idx}>{item.definition}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="mt-8 flex flex-wrap gap-7">
-                    <p>Synonyms - </p>
-                    <h5 className="font-semibold flex flex-wrap gap-3 text-purple-500">
-                      {item.synonyms.length === 0
-                        ? "No synonyms"
-                        : item.synonyms.map((item, id) => (
-                            <p key={id}>{item}</p>
-                          ))}
-                    </h5>
-                  </div>
-                </div>
-              );
+              return <Meaning item={item} key={index} />;
             })}
           </div>
         ) : isError ? (
@@ -151,7 +120,7 @@ function App() {
             </div>
             <div className="flex flex-col gap-2">
               <p className="text-4xl text-gray-500">
-                {error.title} for "{wrongWord}"
+                {error.response.data.title} for "{wrongWord}"
               </p>
               <p className="text-md text-gray-500">{error.message}</p>
               <p className="text-md text-gray-500">{error.resolution}</p>
@@ -169,7 +138,7 @@ function App() {
         )}
       </div>
       <Footer />
-    </div>
+    </>
   );
 }
 
